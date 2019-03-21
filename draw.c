@@ -95,15 +95,16 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
   struct matrix * sphere = new_matrix(4,step);
 
   double x, y, z;
-  int full = M_PI * 2;
+  double full = M_PI * 2;
+  double real_step = full/step;
 
-  for (double phi = 0; phi < step - 1; phi++){
-    for (double theta = 0; theta < (step / 2); theta++){
-      x = r*cos(full * ( theta / step)) + cx;
-      z = r*cos(full * (theta / step)) * sin(full * (phi / step)) + cz;
-      y = r*sin(full * (theta / step)) * cos(full * (phi / step)) + cy;
-      printf("POINT\n%lf %lf %lf\n", x, y, z);
-      add_point(sphere, x, y, z);
+  for (double phi = 0; phi < full; phi += real_step){
+    for (double theta = 0; theta < full / 2; theta += real_step){
+        x = r*cos(theta) + cx;
+        y = r*sin(theta) * cos(phi) + cy;
+        z = r*sin(theta) * sin(phi) + cz;
+        printf("POINT\n%lf %lf %lf\n", x, y, z);
+        add_point(sphere, x, y, z);
     }
   }
 

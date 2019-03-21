@@ -16,7 +16,7 @@ sphere
 #rotate 90 degrees about y to check lines
 ident
 rotate
-z 90
+y 90
 move
 250 250 0
 apply

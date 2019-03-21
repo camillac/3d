@@ -63,19 +63,15 @@ void add_sphere( struct matrix * edges,
                  double r, int step ) {
   struct matrix * sphere = generate_sphere(cx, cy, cz, r, step);
 
-  printf("SPHERE MATRIX\n");
-  print_matrix(sphere);
-
   double x, y, z;
 
   for (int i = 0; i < sphere->lastcol; i++){
     x = sphere->m[0][i];
     y = sphere->m[1][i];
     z = sphere->m[2][i];
-    printf("SPHERE\n%lf %lf %lf\n", x, y, z);
     add_edge(edges, x, y, z, x + 2, y + 2, z + 2);
   }
-  print_matrix(edges);
+  free_matrix(sphere);
 }
 
 /*======== void generate_sphere() ==========
@@ -99,17 +95,13 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
   double real_step = full/step;
 
   for (double phi = 0; phi < full; phi += real_step){
-    for (double theta = 0; theta < full / 2; theta += real_step){
+    for (double theta = 0; theta < (full / 2) + 1; theta += real_step){
         x = r*cos(theta) + cx;
         y = r*sin(theta) * cos(phi) + cy;
         z = r*sin(theta) * sin(phi) + cz;
-        printf("POINT\n%lf %lf %lf\n", x, y, z);
         add_point(sphere, x, y, z);
     }
   }
-
-  printf("\n\nPRINTING SPHERE\n" );
-  print_matrix(sphere);
 
   return sphere;
 }
@@ -132,7 +124,17 @@ struct matrix * generate_sphere(double cx, double cy, double cz,
 void add_torus( struct matrix * edges,
                 double cx, double cy, double cz,
                 double r1, double r2, int step ) {
-  return;
+  struct matrix * torus = generate_torus(cx, cy, cz, r1, r2, step);
+
+  double x, y, z;
+
+  for (int i = 0; i < torus->lastcol; i++){
+    x = torus->m[0][i];
+    y = torus->m[1][i];
+    z = torus->m[2][i];
+    add_edge(edges, x, y, z, x + 2, y + 2, z + 2);
+  }
+  free_matrix(torus);
 }
 
 /*======== void generate_torus() ==========
@@ -150,7 +152,22 @@ void add_torus( struct matrix * edges,
   ====================*/
 struct matrix * generate_torus( double cx, double cy, double cz,
                                 double r1, double r2, int step ) {
-  return NULL;
+  struct matrix * torus= new_matrix(4,step);
+
+  double x, y, z;
+  double full = M_PI * 2;
+  double real_step = full/step;
+
+  for (double phi = 0; phi < full; phi += real_step){
+    for (double theta = 0; theta < full; theta += real_step){
+        x = cos(phi) * (r1*cos(theta) + r2) + cx;
+        y = r1*sin(theta) + cy;
+        z = -sin(phi) * (r1 * cos(theta) + r2) + cz;
+        add_point(torus, x, y, z);
+    }
+  }
+
+  return torus;
 }
 
 /*======== void add_circle() ==========
